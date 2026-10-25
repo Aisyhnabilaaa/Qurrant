@@ -14,7 +14,6 @@ const LoginRegis = ({ setUserRole }) => {
     // ✅ Fungsi Register
     const handleRegister = async (e) => {
         e.preventDefault();
-        console.log("📤 Data yang dikirim ke backend:", { username, email, password });
 
         if (!username || !email || !password) {
             setMessage("Semua field harus diisi!");
@@ -36,7 +35,6 @@ const LoginRegis = ({ setUserRole }) => {
     // ✅ Fungsi Login
     const handleLogin = async (e) => {
         e.preventDefault();
-        console.log("📤 Data yang dikirim ke backend untuk login:", { username, password });
 
         if (!username || !password) {
             setMessage("Username dan password harus diisi!");
@@ -45,7 +43,6 @@ const LoginRegis = ({ setUserRole }) => {
 
         try {
             const response = await loginUser(username, password);
-            console.log("✅ Login sukses:", response.data);
 
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("role", response.data.role);
