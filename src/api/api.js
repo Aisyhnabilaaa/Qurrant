@@ -14,7 +14,6 @@ api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
   if (token) {
-    console.log("✅ Menggunakan token:", token); // 🔍 Debug token
     config.headers.Authorization = `Bearer ${token}`;
   } else {
     console.warn("⚠️ Tidak ada token! Pastikan sudah login.");
