@@ -15,13 +15,13 @@ import ProtectedRoute from "./ProtectedRoute";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-    const [userRole, setUserRole] = useState(""); 
+    const [دور_المستخدم, ضبط_دور_المستخدم] = useState(""); 
 
     // ✅ Ambil role dari localStorage saat aplikasi dimuat
     useEffect(() => {
-        const storedRole = localStorage.getItem("role");
-        if (storedRole) {
-            setUserRole(storedRole);
+        const الدور_المخزن = localStorage.getItem("role");
+        if (الدور_المخزن) {
+            ضبط_دور_المستخدم(الدور_المخزن);
         }
     }, []);
 
@@ -31,14 +31,14 @@ function App() {
                 <NavbarComponent />
                 <Routes>
                     {/* ✅ Kirim setUserRole ke LoginRegis */}
-                    <Route path="/loginregis" element={<LoginRegis setUserRole={setUserRole} />} />
+                    <Route path="/loginregis" element={<LoginRegis ضبط_دور_المستخدم={ضبط_دور_المستخدم} />} />
 
                     {/* Halaman Utama User */}
                     <Route path="/" element={<HomePage />} />
                     <Route path="/juz/:id" element={<JuzPage />} />
 
                     {/* ✅ Gunakan ProtectedRoute untuk Admin */}
-                    <Route element={<ProtectedRoute allowedRoles={["admin"]} userRole={userRole} />}>
+                    <Route element={<ProtectedRoute الأدوار_المسموح_بها={["admin"]} دور_المستخدم={دور_المستخدم} />}>
                         <Route path="/adminpage" element={<AdminPage />} />
                         <Route path="/beranda" element={<Beranda />} />
                     </Route>

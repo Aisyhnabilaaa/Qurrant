@@ -3,60 +3,60 @@ import { Table, Container, Button } from "react-bootstrap";
 import axios from "axios";
 
 const AdminPage = () => {
-  const [usersData, setUsersData] = useState([]);
-  const token = localStorage.getItem("token");
+  const [بيانات_المستخدمين, ضبط_بيانات_المستخدمين] = useState([]);
+  const رمز_المصادقة = localStorage.getItem("token");
 
-  const fetchUsers = useCallback(async () => {
+  const جلب_المستخدمين = useCallback(async () => {
     try {
-      const response = await axios.get("https://qurrant.vercel.app/api/reading", {
-        headers: { Authorization: `Bearer ${token}` },
+      const الاستجابة = await axios.get("https://qurrant.vercel.app/api/reading", {
+        headers: { Authorization: `Bearer ${رمز_المصادقة}` },
       });
 
-      console.log("✅ Data dari Backend:", response.data);
-      setUsersData(response.data);
-    } catch (error) {
-      console.error("❌ Gagal mengambil data pengguna:", error);
+      console.log("✅ Data dari Backend:", الاستجابة.data);
+      ضبط_بيانات_المستخدمين(الاستجابة.data);
+    } catch (الخطأ) {
+      console.error("❌ Gagal mengambil data pengguna:", الخطأ);
     }
-  }, [token]);
+  }, [رمز_المصادقة]);
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+    جلب_المستخدمين();
+  }, [جلب_المستخدمين]);
 
   // 🔹 Kelompokkan data berdasarkan username
-  const groupedUsers = usersData.reduce((acc, curr) => {
-    const username = curr.user.username;
+  const المستخدمون_المجمعون = بيانات_المستخدمين.reduce((المجمع, الحالي) => {
+    const اسم_المستخدم = الحالي.user.username;
 
-    if (!acc[username]) {
-      acc[username] = {
-        username: username,
-        readings: [],
+    if (!المجمع[اسم_المستخدم]) {
+      المجمع[اسم_المستخدم] = {
+        اسم_المستخدم: اسم_المستخدم,
+        القراءات: [],
       };
     }
 
-    acc[username].readings.push({
-      juz: curr.juz,
-      surah: curr.surah,
-      catatan: curr.catatan,
+    المجمع[اسم_المستخدم].القراءات.push({
+      الجزء: الحالي.juz,
+      السورة: الحالي.surah,
+      الملاحظة: الحالي.catatan,
     });
 
-    return acc;
+    return المجمع;
   }, {});
 
 
 // 🔄 Fungsi untuk reset semua progress membaca
-const resetProgress = async () => {
-  const modal = document.createElement("div");
-  modal.className = "modal-backdrop d-flex align-items-center justify-content-center";
-  modal.style.position = "fixed";
-  modal.style.top = 0;
-  modal.style.left = 0;
-  modal.style.width = "100vw";
-  modal.style.height = "100vh";
-  modal.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-  modal.style.zIndex = 1050;
+const إعادة_ضبط_التقدم = async () => {
+  const النافذة = document.createElement("div");
+  النافذة.className = "modal-backdrop d-flex align-items-center justify-content-center";
+  النافذة.style.position = "fixed";
+  النافذة.style.top = 0;
+  النافذة.style.left = 0;
+  النافذة.style.width = "100vw";
+  النافذة.style.height = "100vh";
+  النافذة.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+  النافذة.style.zIndex = 1050;
 
-  modal.innerHTML = `
+  النافذة.innerHTML = `
     <div class="modal-dialog modal-dialog-centered" style="background: white; border-radius: 8px; padding: 20px; max-width: 400px;">
       <div class="modal-content border-0">
         <div class="modal-header border-0">
@@ -73,30 +73,30 @@ const resetProgress = async () => {
     </div>
   `;
 
-  document.body.appendChild(modal);
+  document.body.appendChild(النافذة);
 
-  return new Promise((resolve) => {
+  return new Promise((إتمام) => {
     document.getElementById("confirm-reset").onclick = async () => {
-      document.body.removeChild(modal);
+      document.body.removeChild(النافذة);
 
       try {
-        const response = await axios.delete("https://qurrant.vercel.app/api/reading/progress", {
-          headers: { Authorization: `Bearer ${token}` },
+        const الاستجابة = await axios.delete("https://qurrant.vercel.app/api/reading/progress", {
+          headers: { Authorization: `Bearer ${رمز_المصادقة}` },
         });
 
-        alert(response.data.message);
-        fetchUsers(); // Refresh data setelah reset
-        resolve();
-      } catch (error) {
-        console.error("❌ Gagal menghapus progress:", error);
+        alert(الاستجابة.data.message);
+        جلب_المستخدمين(); // Refresh data setelah reset
+        إتمام();
+      } catch (الخطأ) {
+        console.error("❌ Gagal menghapus progress:", الخطأ);
         alert("Gagal menghapus progress!");
-        resolve();
+        إتمام();
       }
     };
 
     document.getElementById("cancel-reset").onclick = () => {
-      document.body.removeChild(modal);
-      resolve();
+      document.body.removeChild(النافذة);
+      إتمام();
     };
   });
 };
@@ -108,7 +108,7 @@ const resetProgress = async () => {
       <h2 className="text-center mb-4">Admin Dashboard</h2>
 
       {/* Tombol Reset Progress */}
-      <Button variant="danger" className="mb-3" onClick={resetProgress}>
+      <Button variant="danger" className="mb-3" onClick={إعادة_ضبط_التقدم}>
         🔄 Reset Semua Progress
       </Button>
 
@@ -123,19 +123,19 @@ const resetProgress = async () => {
           </tr>
         </thead>
         <tbody>
-          {Object.values(groupedUsers).length > 0 ? (
-            Object.values(groupedUsers).map((user, index) => {
-              return user.readings.map((reading, idx) => (
-                <tr key={`${user.username}-${idx}`}>
-                  {idx === 0 && (
-                    <td rowSpan={user.readings.length}>{index + 1}</td>
+          {Object.values(المستخدمون_المجمعون).length > 0 ? (
+            Object.values(المستخدمون_المجمعون).map((مستخدم, الفهرس) => {
+              return مستخدم.القراءات.map((قراءة, ترتيب_القراءة) => (
+                <tr key={`${مستخدم.اسم_المستخدم}-${ترتيب_القراءة}`}>
+                  {ترتيب_القراءة === 0 && (
+                    <td rowSpan={مستخدم.القراءات.length}>{الفهرس + 1}</td>
                   )}
-                  {idx === 0 && (
-                    <td rowSpan={user.readings.length}>{user.username}</td>
+                  {ترتيب_القراءة === 0 && (
+                    <td rowSpan={مستخدم.القراءات.length}>{مستخدم.اسم_المستخدم}</td>
                   )}
-                  <td>{reading.juz}</td>
-                  <td>{reading.surah}</td>
-                  <td>{reading.catatan}</td>
+                  <td>{قراءة.الجزء}</td>
+                  <td>{قراءة.السورة}</td>
+                  <td>{قراءة.الملاحظة}</td>
                 </tr>
               ));
             })

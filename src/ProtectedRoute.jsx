@@ -1,12 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
 
-const ProtectedRoute = ({ allowedRoles, userRole }) => {
-    const role = userRole || localStorage.getItem("role"); 
+const ProtectedRoute = ({ الأدوار_المسموح_بها, دور_المستخدم }) => {
+    const الدور = دور_المستخدم || localStorage.getItem("role"); 
 
-    console.log("🔍 Role user saat akses halaman:", role);
-    console.log("🛑 Role yang diizinkan:", allowedRoles);
+    console.log("🔍 Role user saat akses halaman:", الدور);
+    console.log("🛑 Role yang diizinkan:", الأدوار_المسموح_بها);
 
-    return role && allowedRoles.includes(role.toLowerCase()) ? <Outlet /> : <Navigate to="/" replace />;
+    return الدور && الأدوار_المسموح_بها.includes(الدور.toLowerCase()) ? <Outlet /> : <Navigate to="/" replace />;
 };
 
 export default ProtectedRoute;
