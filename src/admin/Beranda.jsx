@@ -3,15 +3,15 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const Beranda = () => {
-  const [juzStatus, setJuzStatus] = useState({}); // Status penyelesaian juz
-  const navigate = useNavigate();
+  const [حالة_الأجزاء, ضبط_حالة_الأجزاء] = useState({}); // Status penyelesaian juz
+  const انتقل_إلى = useNavigate();
 
   useEffect(() => {
-    const updatedStatus = {};
-    for (let i = 1; i <= 30; i++) {
-      updatedStatus[i] = JSON.parse(localStorage.getItem(`juz_${i}_completed`)) || false;
+    const الحالة_المحدثة = {};
+    for (let الرقم = 1; الرقم <= 30; الرقم++) {
+      الحالة_المحدثة[الرقم] = JSON.parse(localStorage.getItem(`juz_${الرقم}_completed`)) || false;
     }
-    setJuzStatus(updatedStatus);
+    ضبط_حالة_الأجزاء(الحالة_المحدثة);
   }, []);
 
   return (
@@ -33,14 +33,14 @@ const Beranda = () => {
       {/* 🔹 BUTTON PER JUZ */}
     <Container className="text-center mt-4">
       <Row className="justify-content-center">
-        {Array.from({ length: 30 }, (_, index) => (
-          <Col xs={4} sm={3} md={2} key={index} className="mb-3">
+        {Array.from({ length: 30 }, (_, الفهرس) => (
+          <Col xs={4} sm={3} md={2} key={الفهرس} className="mb-3">
             <Button
-              variant={juzStatus[index + 1] ? "success" : "primary"}
+              variant={حالة_الأجزاء[الفهرس + 1] ? "success" : "primary"}
               className="button w-100"
-              onClick={() => navigate(`/juz/${index + 1}`)}
+              onClick={() => انتقل_إلى(`/juz/${الفهرس + 1}`)}
             >
-              JUZ {index + 1}
+              JUZ {الفهرس + 1}
             </Button>
           </Col>
         ))}

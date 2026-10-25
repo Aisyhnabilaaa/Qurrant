@@ -1,103 +1,115 @@
+// ملاحظة: أسماء المتغيرات والدوال في هذا المشروع مكتوبة بالعربية الفصحى عن قصد.
+// هذه ليست أخطاء ترميز، بل تسمية مقصودة ليقرأ الكود بالعربية.
+// أما ما يُرسل إلى الخادم أو يُخزَّن (مفاتيح JSON، مفاتيح localStorage، المسارات)
+// وأسماء المكوّنات وواجهات React والمكتبات فقد بقيت كما هي دون تغيير.
+
 import axios from "axios";
 // import axios from "./axiosInstance"; 
 
 
 
 // ✅ Buat instance axios dengan baseURL
-const api = axios.create({
+const واجهة_الخادم = axios.create({
   baseURL: "https://qurrant.vercel.app/api", // Sesuaikan dengan URL backend
   headers: { "Content-Type": "application/json" },
 });
 
 // 🔹 Interceptor untuk menyertakan token JWT jika ada
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+واجهة_الخادم.interceptors.request.use((الإعدادات) => {
+  const رمز_المصادقة = localStorage.getItem("token");
 
-  if (token) {
-    console.log("✅ Menggunakan token:", token); // 🔍 Debug token
-    config.headers.Authorization = `Bearer ${token}`;
+  if (رمز_المصادقة) {
+    console.log("✅ Menggunakan token:", رمز_المصادقة); // 🔍 Debug token
+    الإعدادات.headers.Authorization = `Bearer ${رمز_المصادقة}`;
   } else {
     console.warn("⚠️ Tidak ada token! Pastikan sudah login.");
   }
 
-  return config;
+  return الإعدادات;
 });
 
 
 // ✅ Fungsi untuk registrasi
-export const registerUser = async (username, email, password) => {
+export const تسجيل_مستخدم_جديد = async (اسم_المستخدم, البريد_الإلكتروني, كلمة_المرور) => {
   try {
-    const response = await api.post("/auth/register", { username, email, password });
-    return response.data;
-  } catch (error) {
-    throw error.response ? error.response.data : error;
+    const الاستجابة = await واجهة_الخادم.post("/auth/register", {
+      username: اسم_المستخدم,
+      email: البريد_الإلكتروني,
+      password: كلمة_المرور,
+    });
+    return الاستجابة.data;
+  } catch (الخطأ) {
+    throw الخطأ.response ? الخطأ.response.data : الخطأ;
   }
 };
 
 // ✅ Fungsi untuk login
-export const loginUser = async (username, password) => {
+export const تسجيل_الدخول = async (اسم_المستخدم, كلمة_المرور) => {
   try {
-    const response = await api.post("/auth/login", { username, password });
-    return response.data;
-  } catch (error) {
-    throw error.response ? error.response.data : error;
+    const الاستجابة = await واجهة_الخادم.post("/auth/login", {
+      username: اسم_المستخدم,
+      password: كلمة_المرور,
+    });
+    return الاستجابة.data;
+  } catch (الخطأ) {
+    throw الخطأ.response ? الخطأ.response.data : الخطأ;
   }
 };
 
-export const addReadingProgress = async ( juz, surah,  catatan) => {
+export const إضافة_تقدم_القراءة = async ( الجزء, السورة,  الملاحظة) => {
   try {
-    const response = await api.post("/reading/progress", {
-      juz,
-      surah, // Kirim null jika surah kosong
-      catatan,
+    const الاستجابة = await واجهة_الخادم.post("/reading/progress", {
+      juz: الجزء,
+      surah: السورة, // Kirim null jika surah kosong
+      catatan: الملاحظة,
     });
-    console.log("✅ Data progress berhasil dikirim ke backend:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("⚠ Gagal mengirim progress ke backend:", error.response?.data || error.message);
-    throw error;
+    console.log("✅ Data progress berhasil dikirim ke backend:", الاستجابة.data);
+    return الاستجابة.data;
+  } catch (الخطأ) {
+    console.error("⚠ Gagal mengirim progress ke backend:", الخطأ.response?.data || الخطأ.message);
+    throw الخطأ;
   }
 };
 
 
 
 /** ✅ Ambil Progress Membaca berdasarkan User ID */
-export const getUserReadingProgress = async (userId) => {
+export const جلب_تقدم_قراءة_المستخدم = async (معرف_المستخدم) => {
   try {
-    if (!userId) {
+    if (!معرف_المستخدم) {
       throw new Error("❌ userId tidak ditemukan! Pastikan sudah login.");
     }
 
-    console.log(`🔍 Mengambil progress untuk userId: ${userId}`);
-    const response = await api.get(`/reading/progress/${userId}`);
-    return response.data;
-  } catch (error) {
-    console.error("⚠️ Gagal mengambil progress:", error.response?.data || error.message);
-    throw error.response ? error.response.data : error;
+    console.log(`🔍 Mengambil progress untuk userId: ${معرف_المستخدم}`);
+    const الاستجابة = await واجهة_الخادم.get(`/reading/progress/${معرف_المستخدم}`);
+    return الاستجابة.data;
+  } catch (الخطأ) {
+    console.error("⚠️ Gagal mengambil progress:", الخطأ.response?.data || الخطأ.message);
+    throw الخطأ.response ? الخطأ.response.data : الخطأ;
   }
 };
 
 
 /** ✅ Update Progress (Tandai Selesai + Edit Catatan) */
-export const updateReadingProgress = async (id, surah, status, catatan) => {
+export const تحديث_تقدم_القراءة = async (المعرف, السورة, الحالة, الملاحظة) => {
   try {
-    if (!id) {
+    if (!المعرف) {
       throw new Error("❌ userId tidak ditemukan! Pastikan sudah login.");
     }
 
-    const body = {};
-    if (id) body.id = id
-    if (surah) body.surah = surah;
-    if (status) body.status = status;
-    if (catatan !== null) body.catatan = catatan;
+    const جسم_الطلب = {};
+    if (المعرف) جسم_الطلب.id = المعرف
+    if (السورة) جسم_الطلب.surah = السورة;
+    if (الحالة) جسم_الطلب.status = الحالة;
+    if (الملاحظة !== null) جسم_الطلب.catatan = الملاحظة;
 
-    console.log(`🔄 Memperbarui progress:`, body);
-    const response = await api.put(`/reading/progress/${id}`, body);
-    return response.data;
-  } catch (error) {
-    console.error("⚠️ Gagal memperbarui progress:", error.response?.data || error.message);
-    throw error.response ? error.response.data : error;
+    console.log(`🔄 Memperbarui progress:`, جسم_الطلب);
+    const الاستجابة = await واجهة_الخادم.put(`/reading/progress/${المعرف}`, جسم_الطلب);
+    return الاستجابة.data;
+  } catch (الخطأ) {
+    console.error("⚠️ Gagal memperbarui progress:", الخطأ.response?.data || الخطأ.message);
+    throw الخطأ.response ? الخطأ.response.data : الخطأ;
   }
 };
 
-export default api;
+export default واجهة_الخادم;

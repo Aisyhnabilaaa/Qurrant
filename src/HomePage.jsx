@@ -1,149 +1,149 @@
 import { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
-import juzContent from "./data/juzContent.js";
+import محتوى_الأجزاء from "./data/juzContent.js";
 
-const API_URL = "https://qurrant.vercel.app/api/reading/get/progress"; // Sesuaikan dengan backend kamu
+const رابط_جلب_التقدم = "https://qurrant.vercel.app/api/reading/get/progress"; // Sesuaikan dengan backend kamu
 
 const HomePage = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [selectedJuz, setSelectedJuz] = useState(null);
-  const [surahList, setSurahList] = useState([]);
-  const [surah, setSurah] = useState("");
-  const [status, setStatus] = useState("Belum Dibaca");
-  const [catatan, setCatatan] = useState("");
-  const [juzStatus, setJuzStatus] = useState({});
-  const [username, setUsername] = useState("Anonim");
+  const [النافذة_ظاهرة, ضبط_النافذة_ظاهرة] = useState(false);
+  const [الجزء_المختار, ضبط_الجزء_المختار] = useState(null);
+  const [قائمة_السور, ضبط_قائمة_السور] = useState([]);
+  const [السورة, ضبط_السورة] = useState("");
+  const [الحالة, ضبط_الحالة] = useState("Belum Dibaca");
+  const [الملاحظة, ضبط_الملاحظة] = useState("");
+  const [حالة_الأجزاء, ضبط_حالة_الأجزاء] = useState({});
+  const [اسم_المستخدم, ضبط_اسم_المستخدم] = useState("Anonim");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    const رمز_المصادقة = localStorage.getItem("token");
+    if (رمز_المصادقة) {
       try {
-        const decodedToken = JSON.parse(atob(token.split(".")[1]));
-        setUsername(decodedToken.username || "Anonim");
-      } catch (error) {
-        console.error("❌ Gagal decode token:", error);
+        const الرمز_المفكوك = JSON.parse(atob(رمز_المصادقة.split(".")[1]));
+        ضبط_اسم_المستخدم(الرمز_المفكوك.username || "Anonim");
+      } catch (الخطأ) {
+        console.error("❌ Gagal decode token:", الخطأ);
       }
     }
 
-    fetchProgress();
+    جلب_التقدم();
   }, []);
 
-  const fetchProgress = async () => {
+  const جلب_التقدم = async () => {
     try {
-      const response = await fetch(API_URL, {
+      const الاستجابة = await fetch(رابط_جلب_التقدم, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
-      if (!response.ok) throw new Error("Gagal mengambil data progress");
+      if (!الاستجابة.ok) throw new Error("Gagal mengambil data progress");
 
-      const data = await response.json();
-      const updatedStatus = {};
+      const البيانات = await الاستجابة.json();
+      const الحالة_المحدثة = {};
 
-      data.forEach((item) => {
-        updatedStatus[item.juz] = { status: item.status, username: item.username };
+      البيانات.forEach((العنصر) => {
+        الحالة_المحدثة[العنصر.juz] = { الحالة: العنصر.status, اسم_المستخدم: العنصر.username };
       });
 
-      setJuzStatus(updatedStatus);
-    } catch (error) {
-      console.error("❌ Error mengambil data progress:", error);
+      ضبط_حالة_الأجزاء(الحالة_المحدثة);
+    } catch (الخطأ) {
+      console.error("❌ Error mengambil data progress:", الخطأ);
     }
   };
 
-  const handleShowModal = (juzNumber) => {
-    setSelectedJuz(juzNumber);
-    const selectedJuzData = juzContent.find((juz) => juz.id === juzNumber);
-    setSurahList(selectedJuzData ? selectedJuzData.surah : []);
+  const فتح_النافذة = (رقم_الجزء) => {
+    ضبط_الجزء_المختار(رقم_الجزء);
+    const بيانات_الجزء_المختار = محتوى_الأجزاء.find((جزء) => جزء.الرقم === رقم_الجزء);
+    ضبط_قائمة_السور(بيانات_الجزء_المختار ? بيانات_الجزء_المختار.السور : []);
   
-    const savedData = juzStatus[juzNumber];
-    if (savedData) {
-      setSurah(savedData.surah || "");
-      setStatus(savedData.status || "Belum Dibaca");
-      setCatatan(savedData.catatan || "");
+    const البيانات_المحفوظة = حالة_الأجزاء[رقم_الجزء];
+    if (البيانات_المحفوظة) {
+      ضبط_السورة(البيانات_المحفوظة.السورة || "");
+      ضبط_الحالة(البيانات_المحفوظة.الحالة || "Belum Dibaca");
+      ضبط_الملاحظة(البيانات_المحفوظة.الملاحظة || "");
     } else {
-      setSurah("");
-      setStatus("Belum Dibaca");
-      setCatatan("");
+      ضبط_السورة("");
+      ضبط_الحالة("Belum Dibaca");
+      ضبط_الملاحظة("");
     }
   
-    setShowModal(true);
+    ضبط_النافذة_ظاهرة(true);
   };  
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedJuz(null);
+  const إغلاق_النافذة = () => {
+    ضبط_النافذة_ظاهرة(false);
+    ضبط_الجزء_المختار(null);
   };
 
-  const handleSave = async () => {
-    if (!selectedJuz) {
+  const حفظ_التقدم = async () => {
+    if (!الجزء_المختار) {
       console.error("❌ selectedJuz tidak boleh kosong!");
       return;
     }
   
     // Konversi status ke format yang diterima backend
-    const statusMap = {
+    const خريطة_الحالات = {
       "Belum Dibaca": "belum_dibaca",
       "Sedang Dilakukan": "Sedang_dilakukan",
       "Selesai": "Selesai",
     };
   
-    const progressData = {
-      juz: String(selectedJuz),
-      surah,
-      status: statusMap[status] || "belum_dibaca", // Default jika status tidak cocok
-      catatan,
+    const بيانات_التقدم = {
+      juz: String(الجزء_المختار),
+      surah: السورة,
+      status: خريطة_الحالات[الحالة] || "belum_dibaca", // Default jika status tidak cocok
+      catatan: الملاحظة,
     };
   
-    console.log("📌 Data yang dikirim ke backend:", JSON.stringify(progressData, null, 2));
+    console.log("📌 Data yang dikirim ke backend:", JSON.stringify(بيانات_التقدم, null, 2));
   
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
+      const رمز_المصادقة = localStorage.getItem("token");
+      if (!رمز_المصادقة) {
         console.error("❌ Token tidak ditemukan, user belum login!");
         return;
       }
   
-      const checkResponse = await fetch(`https://qurrant.vercel.app/api/reading/progress/${selectedJuz}`, {
+      const استجابة_الفحص = await fetch(`https://qurrant.vercel.app/api/reading/progress/${الجزء_المختار}`, {
         method: "GET",
-        headers: { "Authorization": `Bearer ${token}` },
+        headers: { "Authorization": `Bearer ${رمز_المصادقة}` },
       });
   
-      const result = await checkResponse.json();
-      console.log("📌 Response GET:", checkResponse.status, result);
+      const النتيجة = await استجابة_الفحص.json();
+      console.log("📌 Response GET:", استجابة_الفحص.status, النتيجة);
   
-      let method = "POST";
-      let url = "https://qurrant.vercel.app/api/reading/progress";
+      let الطريقة = "POST";
+      let الرابط = "https://qurrant.vercel.app/api/reading/progress";
   
-      if (checkResponse.ok && result.data && result.data.juz === String(selectedJuz)) {
-        method = "PUT";
-        url = `https://qurrant.vercel.app/api/reading/progress/${selectedJuz}`;
+      if (استجابة_الفحص.ok && النتيجة.data && النتيجة.data.juz === String(الجزء_المختار)) {
+        الطريقة = "PUT";
+        الرابط = `https://qurrant.vercel.app/api/reading/progress/${الجزء_المختار}`;
       }
   
-      const response = await fetch(url, {
-        method,
+      const الاستجابة = await fetch(الرابط, {
+        method: الطريقة,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          "Authorization": `Bearer ${رمز_المصادقة}`,
         },
-        body: JSON.stringify(progressData),
+        body: JSON.stringify(بيانات_التقدم),
       });
   
-      const responseData = await response.json();
-      console.log("📌 Response dari server:", responseData);
+      const بيانات_الاستجابة = await الاستجابة.json();
+      console.log("📌 Response dari server:", بيانات_الاستجابة);
   
-      if (!response.ok) {
-        throw new Error(`Gagal menyimpan progress: ${responseData.message || response.statusText}`);
+      if (!الاستجابة.ok) {
+        throw new Error(`Gagal menyimpan progress: ${بيانات_الاستجابة.message || الاستجابة.statusText}`);
       }
   
       // Update state
-      const updatedStatus = { ...juzStatus, [selectedJuz]: { status: progressData.status, username } };
-      setJuzStatus(updatedStatus);
-      localStorage.setItem(`juz_${selectedJuz}_progress`, JSON.stringify(progressData));
+      const الحالة_المحدثة = { ...حالة_الأجزاء, [الجزء_المختار]: { الحالة: بيانات_التقدم.status, اسم_المستخدم } };
+      ضبط_حالة_الأجزاء(الحالة_المحدثة);
+      localStorage.setItem(`juz_${الجزء_المختار}_progress`, JSON.stringify(بيانات_التقدم));
   
-      handleCloseModal();
-    } catch (error) {
-      console.error("❌ Error menyimpan progress:", error.message);
+      إغلاق_النافذة();
+    } catch (الخطأ) {
+      console.error("❌ Error menyimpan progress:", الخطأ.message);
     }
   };
   
@@ -162,51 +162,51 @@ const HomePage = () => {
         </Container>
       </header>
       <Container className="text-center mt-4">
-        <h5 className="welcome fs-1 my-4 text-white">Selamat datang, {username}!</h5>
+        <h5 className="welcome fs-1 my-4 text-white">Selamat datang, {اسم_المستخدم}!</h5>
         <Row className="justify-content-center">
-          {Array.from({ length: 30 }, (_, index) => {
-            const juzNumber = index + 1;
-            const juzData = juzStatus[juzNumber] || { status: "Belum Dibaca", username: "" };
-            const variant =
-              juzData.status === "Selesai"
+          {Array.from({ length: 30 }, (_, الفهرس) => {
+            const رقم_الجزء = الفهرس + 1;
+            const بيانات_الجزء = حالة_الأجزاء[رقم_الجزء] || { الحالة: "Belum Dibaca", اسم_المستخدم: "" };
+            const نمط_الزر =
+              بيانات_الجزء.الحالة === "Selesai"
                 ? "success"
-                : juzData.status === "Sedang_dilakukan"
+                : بيانات_الجزء.الحالة === "Sedang_dilakukan"
                 ? "warning"
                 : "secondary";
             return (
-              <Col xs={4} sm={3} md={2} key={index} className="mb-3">
-                <Button variant={variant} className="w-100" onClick={() => handleShowModal(juzNumber)}>
-                  JUZ {juzNumber}
+              <Col xs={4} sm={3} md={2} key={الفهرس} className="mb-3">
+                <Button variant={نمط_الزر} className="w-100" onClick={() => فتح_النافذة(رقم_الجزء)}>
+                  JUZ {رقم_الجزء}
                   <br />
-                  <small>{juzData.username || "Belum ada"}</small>
+                  <small>{بيانات_الجزء.اسم_المستخدم || "Belum ada"}</small>
                 </Button>
               </Col>
             );
           })}
         </Row>
       </Container>
-      <Modal show={showModal} onHide={handleCloseModal} centered>
+      <Modal show={النافذة_ظاهرة} onHide={إغلاق_النافذة} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Tambah Catatan untuk Juz {selectedJuz}</Modal.Title>
+          <Modal.Title>Tambah Catatan untuk Juz {الجزء_المختار}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>Juz</Form.Label>
-              <Form.Control type="text" value={selectedJuz || ""} readOnly />
+              <Form.Control type="text" value={الجزء_المختار || ""} readOnly />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Surah</Form.Label>
-              <Form.Select value={surah} onChange={(e) => setSurah(e.target.value)}>
+              <Form.Select value={السورة} onChange={(الحدث) => ضبط_السورة(الحدث.target.value)}>
                 <option value="">Pilih Surah</option>
-                {surahList.map((s, index) => (
-                  <option key={index} value={s}>{s}</option>
+                {قائمة_السور.map((سورة, الفهرس) => (
+                  <option key={الفهرس} value={سورة}>{سورة}</option>
                 ))}
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Status Juz</Form.Label>
-              <Form.Select value={status} onChange={(e) => setStatus(e.target.value)}>
+              <Form.Select value={الحالة} onChange={(الحدث) => ضبط_الحالة(الحدث.target.value)}>
                 <option>Belum Dibaca</option>
                 <option>Sedang Dilakukan</option>
                 <option>Selesai</option>
@@ -214,13 +214,13 @@ const HomePage = () => {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Catatan</Form.Label>
-              <Form.Control as="textarea" rows={3} value={catatan} onChange={(e) => setCatatan(e.target.value)} />
+              <Form.Control as="textarea" rows={3} value={الملاحظة} onChange={(الحدث) => ضبط_الملاحظة(الحدث.target.value)} />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>Batal</Button>
-          <Button variant="primary" onClick={handleSave}>Simpan</Button>
+          <Button variant="secondary" onClick={إغلاق_النافذة}>Batal</Button>
+          <Button variant="primary" onClick={حفظ_التقدم}>Simpan</Button>
         </Modal.Footer>
       </Modal>
     </>

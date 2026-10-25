@@ -2,55 +2,55 @@ import { useState } from "react"
 import axios from "axios"
 
 const CreateProgress = ()=> {
-    const [data, setData]= useState({
+    const [البيانات, ضبط_البيانات]= useState({
         juz : "",
         surah: "",
         catatan: "",
     })
-    const submit= async (e)=>{
-        e.preventDefault()
-        const user = localStorage.getItem('token')
+    const إرسال= async (الحدث)=>{
+        الحدث.preventDefault()
+        const رمز_المصادقة = localStorage.getItem('token')
         // const userToken = JSON.parse(user)
         try {
-            const response = await  axios.post("http://localhost:3000/api/reading/progress", data, {
+            const الاستجابة = await  axios.post("http://localhost:3000/api/reading/progress", البيانات, {
                 headers:{
-                    Authorization: `Bearer ${user}`
+                    Authorization: `Bearer ${رمز_المصادقة}`
                 }
             })
-            const result = response.data
-            console.log("ini hasilnya", result)
-            setData({
+            const النتيجة = الاستجابة.data
+            console.log("ini hasilnya", النتيجة)
+            ضبط_البيانات({
                 juz : "",
                 surah: "",
                 catatan: "",
             })
-        } catch (error) {
-            console.log("error saat submit", error.message)
+        } catch (الخطأ) {
+            console.log("error saat submit", الخطأ.message)
             
         }
     }
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setData({ ...data, [name]: value });
+    const معالجة_التغيير = (الحدث) => {
+        const { name: الاسم, value: القيمة } = الحدث.target;
+        ضبط_البيانات({ ...البيانات, [الاسم]: القيمة });
       };
     return (
         <div>
             
             <div>
-                <form onSubmit={submit}>
+                <form onSubmit={إرسال}>
 
                     <div >
                         <h1>BUAT AKUN DULU!</h1>
                         <div >
-                            <input type="text" name="juz" value={data.juz} onChange={handleChange}
+                            <input type="text" name="juz" value={البيانات.juz} onChange={معالجة_التغيير}
                                  />
                         </div>
                         <div>
-                            <input type="text" name="surah" value={data.surah} onChange={handleChange}
+                            <input type="text" name="surah" value={البيانات.surah} onChange={معالجة_التغيير}
                                />
                         </div>
                         <div >
-                            <input type="text" name="catatan" value={data.catatan} onChange={handleChange}
+                            <input type="text" name="catatan" value={البيانات.catatan} onChange={معالجة_التغيير}
                                 />
                         </div>
                         <div >

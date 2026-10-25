@@ -29,16 +29,16 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 const NavbarComponent = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [مسجل_الدخول, ضبط_مسجل_الدخول] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // Cek apakah token ada
+    const رمز_المصادقة = localStorage.getItem("token");
+    ضبط_مسجل_الدخول(!!رمز_المصادقة); // Cek apakah token ada
   }, []);
 
-  const handleLogout = () => {
+  const تسجيل_الخروج = () => {
     localStorage.removeItem("token"); // Hapus token saat logout
-    setIsLoggedIn(false);
+    ضبط_مسجل_الدخول(false);
     window.location.reload(); // Refresh halaman supaya update
   };
 
@@ -51,8 +51,8 @@ const NavbarComponent = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <div className="join d-flex gap-4">
-            {isLoggedIn ? (
-              <button className="btn btn-danger" onClick={handleLogout}>
+            {مسجل_الدخول ? (
+              <button className="btn btn-danger" onClick={تسجيل_الخروج}>
                 Logout
               </button>
             ) : (
